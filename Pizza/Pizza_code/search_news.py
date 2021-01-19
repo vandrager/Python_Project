@@ -3,7 +3,6 @@ import requests
 import pandas as pd
 import numpy as np
 from bs4 import BeautifulSoup as bs
-import urllib.request as ur
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
@@ -94,24 +93,23 @@ for i in range(10):
     elem = browser.find_element_by_class_name("_btn_submit_")
     elem.click()
     time.sleep(2)
-    elem = browser.find_element_by_xpath("//*[@id='lnb']/div[1]/div/ul/li[6]/a")
+    # 셀레니움 텍스트 찾기
+    elem =  browser.find_element_by_partial_link_text("뉴스") # 검색결과 페이지에서 특정 문자열을 포함하는 링크 텍스트 찾기 
     elem.click()
     soup = bs(browser.page_source, "lxml")
     news_list = soup.find_all("div", attrs={"class": "news_area"})
-    f.write(file_pd.index[i])
-    f.write("최다 조회수 일자: {} \n".format(file_pd['best_day'][i]))
+    f.write(file_pd.index[i] + '\n')
+    f.write("최다 조회수 일자: {}".format(file_pd['best_day'][i])+ '\n')
 
     for news in news_list:
         title = news.find("a", attrs={"class":"news_tit"})["title"]
         link = news.find("a", attrs={"class":"news_tit"})["href"]
         print("-"*40)
-        print(f"제목 : {title} \n")
-        print(f"링크 : {link} \n")
-        f.write(title)
-        f.write(link)
-    
+        print(f"제목 : {title}")
+        print(f"링크 : {link}")
+        f.write(title+ '\n')
+        f.write(link+ '\n')
+    f.write('\n')
 browser.quit()
 
 f.close()
-
-# f.write(i.text + '\n')

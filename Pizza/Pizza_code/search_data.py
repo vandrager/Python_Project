@@ -68,28 +68,29 @@ month_group = df.groupby(['월'])
 for key, group in month_group:
     print("* key :", key)
     print("* number :", len(group))
+    print(group.mean())
     print('\n')
 
 
 # 월별 데이터 평균 구하기
 month_mean = df.groupby(df['월']).mean()
-print(month_mean)
+print(round(month_mean, 3))
 
 # heatmap 그래프 출력하기(자료형태: 데이터 프레임)
-# plt.figure(figsize = (20, 8))
-# sns.heatmap(month_mean, cmap='Blues', annot = True)  # annot = True 히트맵 위에 값 표시
-# plt.show()
+plt.figure(figsize = (20, 8))
+sns.heatmap(month_mean, cmap='Blues', annot = True)  # annot = True 히트맵 위에 값 표시
+plt.show()
 
 # month_mean.to_excel("month_mean.xlsx")
 
 # treemap 출력하기
-# df_pivot = df.pivot_table(index = '연', values = ['피자헛', '파파존스', '도미노피자', '반올림피자샵', '미스터피자', '피자마루', '피자알볼로', '피자나라치킨공주', '7번가피자', '피자헤븐'], aggfunc = 'mean')
-# print(df_pivot)
-# import squarify
-# labels = ['7번가피자', '도미노피자', '미스터피자', '반올림피자샵', '파파존스', '피자나라치킨공주', '피자마루', '피자알볼로', '피자헛', '피자헤븐']
-# colors = ['yellow', 'aqua', 'violet', 'salmon', 'gold', 'olive', 'beige', 'teal', 'darkblue', 'seagreen']
-# squarify.plot(sizes = df_pivot.loc['2020', '7번가피자':'피자헤븐'], label=labels, color=colors)
-# plt.show()
+df_pivot = df.pivot_table(index = '연', values = ['피자헛', '파파존스', '도미노피자', '반올림피자샵', '미스터피자', '피자마루', '피자알볼로', '피자나라치킨공주', '7번가피자', '피자헤븐'], aggfunc = 'mean')
+print(df_pivot)
+import squarify
+labels = ['7번가피자', '도미노피자', '미스터피자', '반올림피자샵', '파파존스', '피자나라치킨공주', '피자마루', '피자알볼로', '피자헛', '피자헤븐']
+colors = ['yellow', 'aqua', 'violet', 'salmon', 'gold', 'olive', 'beige', 'teal', 'darkblue', 'seagreen']
+squarify.plot(sizes = df_pivot.loc['2020', '7번가피자':'피자헤븐'], label=labels, color=colors)
+plt.show()
 
 
 ## 2020년 피자 브랜드 검색량 최다 조회수 일자 구하기
@@ -117,4 +118,3 @@ for index, c in enumerate(max_match.values):
     print(f"최다조회수 날짜: {df.iloc[c, 0]}")
     print(f"{round(df.iloc[c, index+1], 2)}점")
     print("")
-
