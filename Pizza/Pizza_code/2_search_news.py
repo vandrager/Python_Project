@@ -1,7 +1,5 @@
 import os, re, usecsv
-import requests
 import pandas as pd
-import numpy as np
 from bs4 import BeautifulSoup as bs
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
