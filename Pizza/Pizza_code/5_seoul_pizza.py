@@ -17,16 +17,18 @@ from openpyxl import Workbook #  결과물을 엑셀 파일로 저장
 os.chdir(r"C:\Users\vandr\OneDrive\바탕 화면\Bigdata\Project_python\Pizza\Dataset")
 file = pd.read_csv("seoul_random.csv", encoding = "cp949")
 brand = ['피자헛', '파파존스', '도미노피자', '반올림피자샵', '미스터피자', '피자마루', '피자알볼로', '피자나라치킨공주', '7번가피자', '피자헤븐']
-print(file['주소'][0])
-print(brand[0])
-write_wb = Workbook()
-write_ws = write_wb.active
+
 interval = 3 # 3초에 한번씩 스크롤 내림(많아서 렉걸릴 수 있으니 좀 길게 설정)
 browser = webdriver.Chrome("C:/Users/vandr/OneDrive/바탕 화면/Bigdata/Python/webscraping_basic/chromedriver.exe")
 browser.maximize_window()
 time.sleep(interval)
+
+
 # 지역구별 피자집 검색 시작
-for i in range(25):
+# 22일 11시 기준 금천구까지 했으니 공릉동 8부터 시작
+for i in range(8, 25):
+    write_wb = Workbook()
+    write_ws = write_wb.active
     browser.get("https://www.yogiyo.co.kr/mobile/#/")
     elem = browser.find_element_by_name("address_input")
     elem.click()
@@ -131,22 +133,13 @@ for i in range(25):
             prev_height = curr_height
 
         print("리뷰 스크롤 완료")
-
-
         # 피자 브랜드 리뷰 스크래핑
         soup = bs(browser.page_source, "lxml")
         # page_source로 스크롤 끝까지 내렸을 때의 html 정보를 가져오게 됨
 
-        # 정보) 속성을 리스트로 감싸주어 조건을 만족하는 모든 데이터를 가져올 수 있다.
         # reviews = soup.find_all("div", attrs={"class":["ImZGtf mpg5gc", "Vpfmgd"]})
         reviews = soup.find_all("li", attrs={"class": "list-group-item star-point ng-scope"})
         print(len(reviews))
-        total_average = 0 # 리뷰 전체 평균
-        taste_average = 0 # 맛 전체 평균
-        quantity_average = 0 # 양 전체 평균
-        delivery_average = 0 # 배달 전체 평균
-        menu = []
-        comment = []
 
 
         for review in reviews:
@@ -155,26 +148,29 @@ for i in range(25):
             delivery = review.find("span", attrs={"class": "points ng-binding", "ng-show":"review.rating_delivery > 0"})
             eat_menu = review.find("div", attrs={"class": "order-items default ng-binding", "ng-click": "show_review_menu($event)"})
             com_menu = review.find("p", attrs={"class": "ng-binding", "ng-show": "review.comment"})
-            date = review.find("span", attrs = {"ng-bind": "review.time|since", "class": "review-time ng-binding"})
+            day = review.find("span", attrs = {"ng-bind": "review.time|since", "class": "review-time ng-binding"})
+            star = review.find_all("span", attrs = {"class": "full ng-scope"})
             # <span class="points ng-binding" ng-show="review.rating_taste &gt; 0">5</span> 여기서 5만 가져오려면 get_text() or text
             # try! 이전 자료는 별점이 없기 때문에 리뷰와 주문 메뉴밖에 확인하지 못한다.
             try:
-                review_point = (int(taste.text) + int(quantity.text) + int(delivery.text))/3
+                star_point = int(len(star))
                 taste_point = int(taste.text)
                 quantity_point = int(quantity.text)
                 delivery_point = int(delivery.text)
                 menu = eat_menu.text.strip()
-                comment = com_menu.text
+                comment = com_menu.text.strip()
+                date = day.text.strip()
             except:
-                pass
-            total_average += review_point
-            taste_average += taste_point
-            quantity_average += quantity_point
-            delivery_average += delivery_point
-            write_ws.append([file['주소'][i], match[j], menu, taste_point, quantity_point, delivery_point, comment])
-        
+                star_point = int(len(star))
+                taste_point = 0
+                quantity_point = 0
+                delivery_point = 0
+                menu = eat_menu.text.strip()
+                comment = com_menu.text.strip()
+                date = day.text.strip()
+            write_ws.append([file['주소'][i], match[j], date, menu, star_point, taste_point, quantity_point, delivery_point, comment])
         browser.back()
+    write_wb.save("seoul_{}.xlsx".format(i+1))
 
-
-
-write_wb.save('pizza_issue.xlsx')
+# ['피자헛-개봉2호점', '7번가피자-광명점', '미스터피자-개봉오류점', '피자마루-고척점', '반올림피자샵-구로구점', '파파존스피자-개봉점', '피자마루-천왕지구점', '김준현의피자헤븐-광명점', '도미노피자-개봉점', '피자알볼로-오류점', '피자
+# 마루-개봉1동점']
