@@ -7,10 +7,6 @@ import urllib.request as ur
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
-from collections import Counter # Counter: 리스트에서 모든 아이템을 count 하고 싶을 때 사용
-# result = Counter(myList)
-# for key in result:
-#     print key, result[key]
 from openpyxl import Workbook #  결과물을 엑셀 파일로 저장
  
 
@@ -25,8 +21,10 @@ time.sleep(interval)
 
 
 # 지역구별 피자집 검색 시작
-# 22일 11시 기준 금천구까지 했으니 공릉동 8부터 시작
-for i in range(8, 25):
+# 23일 15시 기준 성북구까지 했고 동대문구 에러 발생, 17부터 시작
+# 동대문구 10 김준현의 피자헤븐 회기점 검색 x 문제 이후 수정
+# 추후 금천구(7) 데이터셋 길이 확인
+for i in range(17, 25):
     write_wb = Workbook()
     write_ws = write_wb.active
     browser.get("https://www.yogiyo.co.kr/mobile/#/")
@@ -99,9 +97,15 @@ for i in range(8, 25):
         elem.send_keys(match[j])
         elem.send_keys(Keys.ENTER)
         time.sleep(interval)
-        elem = browser.find_element_by_css_selector("#content > div > div:nth-child(5) > div > div > div > div")
-        elem.click()
-        time.sleep(interval)
+        try:
+            elem = browser.find_element_by_css_selector("#content > div > div:nth-child(5) > div > div > div > div")
+            elem.click()
+            time.sleep(interval)
+        except:
+            browser.back()
+            break
+
+        
         elem = browser.find_element_by_xpath("//*[@id='content']/div[2]/div[1]/ul/li[2]/a")
         elem.click()
         time.sleep(2)
@@ -171,6 +175,3 @@ for i in range(8, 25):
             write_ws.append([file['주소'][i], match[j], date, menu, star_point, taste_point, quantity_point, delivery_point, comment])
         browser.back()
     write_wb.save("seoul_{}.xlsx".format(i+1))
-
-# ['피자헛-개봉2호점', '7번가피자-광명점', '미스터피자-개봉오류점', '피자마루-고척점', '반올림피자샵-구로구점', '파파존스피자-개봉점', '피자마루-천왕지구점', '김준현의피자헤븐-광명점', '도미노피자-개봉점', '피자알볼로-오류점', '피자
-# 마루-개봉1동점']

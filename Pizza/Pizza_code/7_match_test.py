@@ -17,10 +17,8 @@ from openpyxl import Workbook #  결과물을 엑셀 파일로 저장
 
 os.chdir(r"C:\Users\vandr\OneDrive\바탕 화면\Bigdata\Project_python\Pizza\Dataset")
 file = pd.read_csv("seoul_random.csv", encoding = "cp949")
+file_2 = pd.read_csv("not_seoul_random.csv", encoding = "cp949")
 brand = ['피자헛', '파파존스', '도미노피자', '반올림피자샵', '미스터피자', '피자마루', '피자알볼로', '피자나라치킨공주', '7번가피자', '피자헤븐']
-
-for k in range(len(file)):
-    print(file['주소'][k])
 
 write_wb = Workbook()
 write_ws = write_wb.active
@@ -38,7 +36,7 @@ for i in range(25):
 
     # 해당 지역구 주소 입력
 
-    elem.send_keys(file['주소'][i]) # 브랜드 이름도 자동화
+    elem.send_keys(file_2['주소'][i]) # 브랜드 이름도 자동화
     elem.send_keys(Keys.ENTER)
     time.sleep(2)
 
