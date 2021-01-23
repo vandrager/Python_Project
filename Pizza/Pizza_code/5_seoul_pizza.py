@@ -23,8 +23,11 @@ time.sleep(interval)
 # 지역구별 피자집 검색 시작
 # 23일 15시 기준 성북구까지 했고 동대문구 에러 발생, 17부터 시작
 # 동대문구 10 김준현의 피자헤븐 회기점 검색 x 문제 이후 수정
+# 목동 18번 피자마루-목동2호점 리뷰 5개 짜리라 문제 발생 이후 수정
+# 은평구 21번도 위와 동일문제 발생
+# 마지막 중랑구 24번 시간 문제로 중단, 기본 코드로 다시 디버그해볼것
 # 추후 금천구(7) 데이터셋 길이 확인
-for i in range(17, 25):
+for i in range(24, 25):
     write_wb = Workbook()
     write_ws = write_wb.active
     browser.get("https://www.yogiyo.co.kr/mobile/#/")
@@ -97,13 +100,11 @@ for i in range(17, 25):
         elem.send_keys(match[j])
         elem.send_keys(Keys.ENTER)
         time.sleep(interval)
-        try:
-            elem = browser.find_element_by_css_selector("#content > div > div:nth-child(5) > div > div > div > div")
-            elem.click()
-            time.sleep(interval)
-        except:
-            browser.back()
-            break
+        
+        elem = browser.find_element_by_css_selector("#content > div > div:nth-child(5) > div > div > div > div")
+        elem.click()
+        time.sleep(interval)
+
 
         
         elem = browser.find_element_by_xpath("//*[@id='content']/div[2]/div[1]/ul/li[2]/a")
