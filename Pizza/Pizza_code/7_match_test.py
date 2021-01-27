@@ -1,4 +1,4 @@
-import os, re, usecsv
+import os
 import requests
 import pandas as pd
 import numpy as np
@@ -7,21 +7,13 @@ import urllib.request as ur
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
-from collections import Counter # Counter: 리스트에서 모든 아이템을 count 하고 싶을 때 사용
-# result = Counter(myList)
-# for key in result:
-#     print key, result[key]
-from openpyxl import Workbook #  결과물을 엑셀 파일로 저장
-
 
 
 os.chdir(r"C:\Users\vandr\OneDrive\바탕 화면\Bigdata\Project_python\Pizza\Dataset")
-file = pd.read_csv("seoul_random.csv", encoding = "cp949")
-file_2 = pd.read_csv("not_seoul_random.csv", encoding = "cp949")
+file = pd.read_csv("seoul_random.csv", encoding = "cp949") # 서울 자치구
+file_2 = pd.read_csv("not_seoul_random.csv", encoding = "cp949") # 서울 제외 지역
 brand = ['피자헛', '파파존스', '도미노피자', '반올림피자샵', '미스터피자', '피자마루', '피자알볼로', '피자나라치킨공주', '7번가피자', '피자헤븐']
 
-write_wb = Workbook()
-write_ws = write_wb.active
 
 browser = webdriver.Chrome("C:/Users/vandr/OneDrive/바탕 화면/Bigdata/Python/webscraping_basic/chromedriver.exe")
 browser.maximize_window()
@@ -36,7 +28,7 @@ for i in range(25):
 
     # 해당 지역구 주소 입력
 
-    elem.send_keys(file_2['주소'][i]) # 브랜드 이름도 자동화
+    elem.send_keys(file['주소'][i]) # 브랜드 이름도 자동화
     elem.send_keys(Keys.ENTER)
     time.sleep(2)
 
@@ -89,5 +81,3 @@ for i in range(25):
     # 지역구 내 TOP10 피자집 리스트 검색 후 match 리스트에 저장
     match = list(set(match_list))
     print(match)
-
-
