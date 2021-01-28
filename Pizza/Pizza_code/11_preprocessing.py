@@ -67,6 +67,8 @@ my_regex = "\(.*\)|\s-\s.*"
 for i in range(len(df)):
     try:
         df['메인메뉴'][i] = re.sub(my_regex, '', df['메인메뉴'][i])
+        text = df['메인메뉴'][i]
+        df['메인메뉴'][i] = " ".join(text.split())
     except:
         pass
 
