@@ -19,9 +19,9 @@ browser = webdriver.Chrome("C:/Users/vandr/OneDrive/바탕 화면/Bigdata/Python
 browser.maximize_window()
 time.sleep(interval)
 
-# 부산(4)부터 시작하자 
+# 광주(7)부터 시작하자 
 # 지역구별 피자집 검색 시작
-for i in range(4, 25):
+for i in range(7, 25):
     write_wb = Workbook()
     write_ws = write_wb.active
     browser.get("https://www.yogiyo.co.kr/mobile/#/")
@@ -102,6 +102,7 @@ for i in range(4, 25):
             time.sleep(interval)
         except:
             elem = browser.find_element_by_css_selector("#category > ul > li.hidden-xs.menu-search > a")
+            time.sleep(l)
             elem.click()
             time.sleep(2)
 

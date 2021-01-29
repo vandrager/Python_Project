@@ -11,7 +11,7 @@ import os
 os.chdir(r"C:\Users\vandr\OneDrive\바탕 화면\Bigdata\Project_python\Pizza\Dataset")
 
 '''
-자치구별 피자 리뷰 데이터에 컬럼 넣어주기
+서울시 자치구별 피자 리뷰 데이터에 컬럼 넣어주기
 for i in range(1, 26):
     file = pd.read_excel("seoul_{}.xlsx".format(i))
     file.columns = "자치구	브랜드	일자	주문메뉴	별점	맛	양	배달	리뷰".split("\t")
@@ -29,20 +29,35 @@ file.to_excel("seoul_total.xlsx")
 print(file.info)
 '''
 
-df = pd.read_excel("seoul_total.xlsx")
+
+# 서울 제외 지역 피자 리뷰 데이터에 컬럼 넣어주기
+for i in range(1, 26):
+    try:
+        file = pd.read_excel("not_seoul_{}.xlsx".format(i))
+        file.columns = "주소	브랜드	일자	주문메뉴	별점	맛	양	배달	리뷰".split("\t")
+        file.to_excel("not_seoul_{}.xlsx".format(i))
+    except:
+        pass
+
+
+# 서울 제외 지역 리뷰 하나로 합치기
+file = pd.read_excel("not_seoul_1.xlsx")
+for i in range(2, 26):
+    try:
+        new = pd.read_excel("not_seoul_{}.xlsx".format(i))
+        file = pd.concat([file, new])
+    except:
+        pass
+    
+file.to_excel("not_seoul_total.xlsx")
+print(file.info)
+
+# 불필요한, 중복 리뷰 삭제
+df = pd.read_excel("not_seoul_total.xlsx")
 df.reset_index()
 df.drop(['Unnamed: 0', "Unnamed: 0.1"], axis=1, inplace=True)
 df.drop_duplicates(['브랜드', '일자', '주문메뉴', '리뷰'])
-df.to_excel("new.xlsx")
 
-location = df['자치구'].str.split(' ') # 문자열을 split 메소드로 분리
-fran = df['브랜드'].str.split("-")
-df['시'] = location.str.get(0)
-df['구'] = location.str.get(1)
-df['동'] = location.str.get(2)
-df['도로명'] = location.str.get(3)
-df.drop(['시', "동", "도로명"], axis=1, inplace=True)
 
-# result = Counter(myList)
-# for key in result:
-#     print key, result[key]
+# 최종본 저장
+df.to_excel("not_seoul.xlsx")
