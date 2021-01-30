@@ -56,11 +56,10 @@ menu = df['주문메뉴'].str.split(",")
 df['메인메뉴'] = menu.str.get(0)
 df['메뉴2'] = menu.str.get(1)
 df['메뉴3'] = menu.str.get(2)
-df['메뉴4'] = menu.str.get(3)
-df['단품주문'] = df['메뉴2'].isnull()
-df['다량주문'] = df['메뉴4'].notnull()
 df['브랜드명'].replace('미스터피자Single메뉴', "미스터피자", inplace = True)
 df['브랜드명'].replace('김준현의 피자헤븐', "김준현의피자헤븐", inplace = True)
+for i in range(len(df)):
+    df['메인메뉴'][i] = df['메인메뉴'][i].replace("페퍼로니", "페페로니") # 페퍼로니 페페로니로 통합
 
 # 메인 메뉴 괄호와 괄호 안의 텍스트 모두 제거
 my_regex = "\(.*\)|\s-\s.*"
@@ -72,11 +71,14 @@ for i in range(len(df)):
     except:
         pass
 
+# 메인 메뉴 사이즈/수량 제거
+for i in range(len(df)):
+    df['메인메뉴'][i] = df['메인메뉴'][i].replace("R/1", "")
+    df['메인메뉴'][i] = df['메인메뉴'][i].replace("L/1", "")
 
 # 열 순서 바꿔주고 저장하기
-# df.drop(["일자", "메뉴2", "메뉴3", "메뉴4"], axis=1, inplace=True)
-df.drop("일자", axis=1, inplace=True)
-df = df[['지역구분', '브랜드명', '지점명', '주문메뉴', '메인메뉴', "메뉴2", "메뉴3", "메뉴4", '별점', '맛', '양', '배달', '리뷰', '연', '월', '일', 'date', 'weekday', '단품주문', '다량주문']]
+df.drop(["일자", "메뉴2", "메뉴3"], axis=1, inplace=True)
+df = df[['지역구분', '브랜드명', '지점명', '주문메뉴', '메인메뉴', "메뉴구분", '그룹구분', '별점', '맛', '양', '배달', '리뷰', '연', '월', '일', 'date', 'weekday']]
 
 os.chdir(r"C:\Users\vandr\OneDrive\바탕 화면\Bigdata\Project_python\Pizza\Dataset")
 df.to_excel("total_review.xlsx")

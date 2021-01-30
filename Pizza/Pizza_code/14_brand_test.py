@@ -71,6 +71,10 @@ for i in range(len(df)):
         df['브랜드'][i] = df['브랜드'][i].replace("ok", "google")
         list_google.append(df['브랜드'][i].strip())
 
+df['키'] = ['포테이토 피자', '페페로니 피자', '페퍼로니 피자']
 
+for i in range(len(df)):
+    df['키'][i] = df['키'][i].replace("페퍼로니", "페페로니")
 print(list_ok)
 print(list_google)
+print(df)
