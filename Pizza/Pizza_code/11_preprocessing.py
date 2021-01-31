@@ -16,6 +16,7 @@ df.to_excel("total_review.xlsx")
 '''
 
 
+# 데이터 전처리 작업
 df = pd.read_excel("total_review.xlsx")
 df.reset_index()
 df.drop_duplicates(['브랜드', '일자', '주문메뉴', '리뷰'])
@@ -31,8 +32,7 @@ df['브랜드명'] = fran.str.get(0)
 df['지점명'] = fran.str.get(1)
 df.drop("브랜드", axis=1, inplace=True)
 
-# 날짜 전처리
-# 형식에 맞지 않는 방금, 며칠 전, 몇 시간 전 등 제거
+# 날짜 전처리 ( 형식에 맞지 않는 방금, 며칠 전, 몇 시간 전 등 제거 )
 for i in range(len(df)):
     if df['일자'][i][-1] != "일":
         df['일자'][i] = np.nan
@@ -59,7 +59,10 @@ df['메뉴3'] = menu.str.get(2)
 df['브랜드명'].replace('미스터피자Single메뉴', "미스터피자", inplace = True)
 df['브랜드명'].replace('김준현의 피자헤븐', "김준현의피자헤븐", inplace = True)
 for i in range(len(df)):
-    df['메인메뉴'][i] = df['메인메뉴'][i].replace("페퍼로니", "페페로니") # 페퍼로니 페페로니로 통합
+    try:
+        df['메인메뉴'][i] = df['메인메뉴'][i].replace("페퍼로니", "페페로니") # 페퍼로니 페페로니로 통합
+    except:
+        pass
 
 # 메인 메뉴 괄호와 괄호 안의 텍스트 모두 제거
 my_regex = "\(.*\)|\s-\s.*"
@@ -73,8 +76,39 @@ for i in range(len(df)):
 
 # 메인 메뉴 사이즈/수량 제거
 for i in range(len(df)):
-    df['메인메뉴'][i] = df['메인메뉴'][i].replace("R/1", "")
-    df['메인메뉴'][i] = df['메인메뉴'][i].replace("L/1", "")
+    try:
+        df['메인메뉴'][i] = df['메인메뉴'][i].replace("R/1", "")
+        df['메인메뉴'][i] = df['메인메뉴'][i].replace("L/1", "")
+    except:
+        pass
+
+# 데이터 전처리 작업 실행 ( 메뉴 )
+df['메뉴구분'] = ""
+menu = ['베이컨', '고르곤졸라', '치즈', '콤비네이션', '스테이크', '쉬림프', '포테이토', '치킨', '고구마', '불고기', '하와이안', '페페로니']
+for i in range(len(df)):
+    try:
+        for k in menu:
+            if k in df['메인메뉴'][i]:
+                df['메뉴구분'][i] += k
+        if df['메뉴구분'][i] == "":
+            df['메뉴구분'][i] = "기타"
+    except:
+        pass
+
+# 데이터 전처리 작업 실행 ( 그룹 )
+df['그룹구분'] = "plz success"
+set_list = ['SET', '세트', 'set']
+for j in range(len(df)):
+    try:
+        if pd.isnull(df['메뉴2'][j]) == False:
+            df['그룹구분'][j] = "Side"
+        elif pd.isnull(df['메뉴2'][j]) == True:
+            df['그룹구분'][j] = "Single"
+        for k in set_list:
+            if (k in df['주문메뉴'][j]) | pd.isnull(df['메뉴3'][j]) == False:
+                df['그룹구분'][j] = "Party"
+    except:
+        pass
 
 # 열 순서 바꿔주고 저장하기
 df.drop(["일자", "메뉴2", "메뉴3"], axis=1, inplace=True)
@@ -85,3 +119,8 @@ df.to_excel("total_review.xlsx")
 
 print(df.head())
 print(df.info())
+
+
+
+# 240934건 부터 그룹구분 버그 발생
+# 메뉴구분 미적용 버그 발생
