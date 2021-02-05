@@ -24,7 +24,7 @@ df_shuffled.dropna(axis = 0, inplace= True) # 서울특별시 주소 정보 제�
 df_shuffled['주소'] = df_shuffled['시군'] + " " + df_shuffled['도로명']# 웹스크래핑에 사용할 주소 열 생성
 data = df_shuffled.loc[:, "주소"].head(25) # 인덱스와 주소만 가져와 별도의 데이터 프레임 생성, 랜덤으로 추출 상위 25개 불러오기
 
-# 자동완성 안되는 주소는 임의로 주소 입력해주기: 2건
+# match_test 후 자동완성이 안되는 주소는 임의로 주소 입력해주기: 2건
 print(data)
 print(len(data))
 

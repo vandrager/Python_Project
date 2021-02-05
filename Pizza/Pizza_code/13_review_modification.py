@@ -53,5 +53,4 @@ for j in range(len(df)):
 
 # 열 순서 바꿔주고 저장하기
 df.drop(["Unnamed: 0", "Unnamed: 0.1", "메뉴2", "메뉴3"], axis=1, inplace=True)
-
 df.to_excel("review_final.xlsx")

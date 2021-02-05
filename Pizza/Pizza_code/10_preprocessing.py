@@ -70,13 +70,7 @@ for i in range(len(df)):
     try:
         df['메인메뉴'][i] = re.sub(my_regex, '', df['메인메뉴'][i])
         text = df['메인메뉴'][i]
-        df['메인메뉴'][i] = " ".join(text.split())
-    except:
-        pass
-
-# 메인 메뉴 사이즈/수량 제거
-for i in range(len(df)):
-    try:
+        df['메인메뉴'][i] = " ".join(text.split()).strip()
         df['메인메뉴'][i] = df['메인메뉴'][i].replace("R/1", "")
         df['메인메뉴'][i] = df['메인메뉴'][i].replace("L/1", "")
     except:
@@ -86,14 +80,14 @@ for i in range(len(df)):
 df['메뉴구분'] = ""
 menu = ['베이컨', '고르곤졸라', '콤비네이션', '스테이크', '쉬림프', '포테이토', '치킨', '고구마', '불고기', '하와이안', '페페로니']
 for i in range(len(df)):
-    try:
-        for k in menu:
-            if k in df['메인메뉴'][i]:
-                df['메뉴구분'][i] += k
-        if df['메뉴구분'][i] == "":
-            df['메뉴구분'][i] = "기타"
-    except:
-        pass
+    list_a = []
+    for k in menu:
+        if k in df['메인메뉴'][i]:
+           list_a.append(k)
+           df['메뉴구분'][i] = " ".join(list_a)
+    if pd.isnull(df['메뉴구분'][i]) == True:
+        df['메뉴구분'][i] = "기타"
+
 
 # 데이터 전처리 작업 실행 ( 그룹 )
 df['그룹구분'] = "plz success"
@@ -105,22 +99,15 @@ for j in range(len(df)):
         elif pd.isnull(df['메뉴2'][j]) == True:
             df['그룹구분'][j] = "Single"
         for k in set_list:
-            if (k in df['주문메뉴'][j]) | pd.isnull(df['메뉴3'][j]) == False:
+            if (k in df['주문메뉴'][j]) | (pd.isnull(df['메뉴3'][j]) == False):
                 df['그룹구분'][j] = "Party"
     except:
         pass
 
-# 열 순서 바꿔주고 저장하기
-df.drop(["일자", "메뉴2", "메뉴3"], axis=1, inplace=True)
+# 불필요한 열 제거 /열 순서 수정 후 최종본 저장
+df.drop(["Unnamed: 0", "Unnamed: 0.1", "일자", "메뉴2", "메뉴3"], axis=1, inplace=True)
 df = df[['지역구분', '브랜드명', '지점명', '주문메뉴', '메인메뉴', "메뉴구분", '그룹구분', '별점', '맛', '양', '배달', '리뷰', '연', '월', '일', 'date', 'weekday']]
 
 os.chdir(r"C:\Users\vandr\OneDrive\바탕 화면\Bigdata\Project_python\Pizza\Dataset")
 df.to_excel("total_review.xlsx")
 
-print(df.head())
-print(df.info())
-
-
-
-# 240934건 부터 그룹구분 버그 발생
-# 메뉴구분 미적용 버그 발생
