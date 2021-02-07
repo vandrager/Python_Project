@@ -71,7 +71,6 @@ for i in range(len(df)):
         df['메인메뉴'][i] = re.sub(my_regex, '', df['메인메뉴'][i])
         text = df['메인메뉴'][i]
         df['메인메뉴'][i] = " ".join(text.split()).strip()
-        df['메인메뉴'][i] = df['메인메뉴'][i].replace("R/1", "")
         df['메인메뉴'][i] = df['메인메뉴'][i].replace("L/1", "")
     except:
         pass
@@ -83,8 +82,8 @@ for i in range(len(df)):
     list_a = []
     for k in menu:
         if k in df['메인메뉴'][i]:
-           list_a.append(k)
-           df['메뉴구분'][i] = " ".join(list_a)
+            list_a.append(k)
+            df['메뉴구분'][i] = " ".join(list_a)
     if pd.isnull(df['메뉴구분'][i]) == True:
         df['메뉴구분'][i] = "기타"
 
