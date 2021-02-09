@@ -1,25 +1,25 @@
 # review data timegraph analysis
 '''
-월별 브랜드 별점 및 주문건수 추이 분석
-메뉴구분별 월 주문건수 추이 분석(M)
-브랜드별 주문건수 추이 분석(Date)
-평일/주말 그룹구분 or 브랜드별 주문건수 추이 분석(weekday)
-요일별 별점/메뉴 구분 분석
+[v] 월별 브랜드 별점 및 주문건수 추이 분석
+[v] 평일/주말 그룹구분 or 브랜드별 주문건수 추이 분석(weekday)
+[v] 브랜드별 주문건수 추이 시각화(Y)
+[] 브랜드별 월 주문건수 추이 분석(M)
 '''
 
 import pandas as pd
 import numpy as np
 import os
-from bs4 import BeautifulSoup as bs
-import urllib.request as ur
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-import time
-from openpyxl import Workbook #  결과물을 엑셀 파일로 저장
+import matplotlib.pyplot as plt
+import matplotlib as mat
+import seaborn as sns
+mat.rcParams['font.family'] = 'Noto Sans CJK KR'
+
 
 os.chdir(r"C:\Users\vandr\OneDrive\바탕 화면\Bigdata\Project_python\Pizza\Dataset")
 df = pd.read_excel("sample.xlsx")
 
+# 월별 브랜드 별점 및 주문건수 추이 분석
+'''
 df1 = df.groupby(df['월'])
 brand = ['피자헛', '파파존스피자', '도미노피자', '반올림피자샵', '미스터피자', '피자마루', '피자알볼로', '피자나라치킨공주', '7번가피자', '김준현의피자헤븐']
 for key, group in df1:
@@ -32,7 +32,7 @@ for key, group in df1:
             count = 0
         print(f">> {i}: {mean}점({count})")
     print("")
-
+'''
 '''
 * key :1월
 * number : 2138
@@ -196,6 +196,7 @@ week_end = ['Saturday', 'Sunday']
 
 # 평일/주말 그룹구분 or 브랜드별 주문건수 추이 분석(weekday)
 df2 = df.groupby(df['브랜드명'])
+'''
 for key, group in df2:
     print(f"* Brand :{key}")
     print("* Total :", len(group))
@@ -216,7 +217,7 @@ for key, group in df2:
     print(f">> 평일: {day_mean}점, ({count_day}개({day_per}%))")
     print(f">> 주말: {end_mean}점, ({count_end}개({end_per}%))")
     print("")
-
+'''
 '''
 * Brand :7번가피자
 * Total : 3263
@@ -268,3 +269,40 @@ for key, group in df2:
 >> 평일: 4.59점, (2716개(62.8%))
 >> 주말: 4.57점, (1609개(37.2%))
 '''
+
+# 브랜드별 주문건수 추이 시각화(Date)
+
+# heatmap 그래프 출력하기(별점 평균/주문 건수)
+df_pivot = df.pivot_table(index = '브랜드명', columns = '연', values = '별점', aggfunc = 'mean') # 브랜드별 연간 별점 평균
+df2_pivot = df.pivot_table(index = '브랜드명', columns = '연', values = '별점', aggfunc = 'count') # 브랜드별 연간 주문건수
+fig = plt.figure(figsize = (20, 10))
+ax1 = fig.add_subplot(1, 2, 1)
+ax2 = fig.add_subplot(1, 2, 2)
+sns.heatmap(df_pivot, cmap='Blues', annot = True, ax = ax1)
+sns.heatmap(df2_pivot, cmap='YlGnBu', vmin=0, vmax=2500, ax = ax2)
+plt.show()
+
+# 주문건수 전체 비율 파이 그래프 만들기
+fig = plt.figure(figsize=(20, 20))
+plt.title("전체 주문건수 브랜드별 비율", size = 15)
+plt.rcParams['font.size'] = 8
+
+ax1 = fig.add_subplot(2, 2, 1)
+ax2 = fig.add_subplot(2, 2, 2)
+ax3 = fig.add_subplot(2, 2, 3)
+ax4 = fig.add_subplot(2, 2, 4)
+df2_pivot[2020].plot(kind = 'pie', autopct="%1.1f%%", startangle=10,
+                        cmap= 'plasma', ax = ax1)
+df2_pivot[2019].plot(kind = 'pie', autopct="%1.1f%%", startangle=10,
+                        cmap= 'plasma', ax = ax2)
+df2_pivot[2018].plot(kind = 'pie', autopct="%1.1f%%", startangle=10,
+                        cmap= 'plasma', ax = ax3)
+df2_pivot[2017].plot(kind = 'pie', autopct="%1.1f%%", startangle=10,
+                        cmap= 'plasma', ax = ax4)
+plt.show()
+
+# 브랜드별 월간 별점/주문건수 그래프 만들기
+df_pivot = df.pivot_table(index = '브랜드명', columns = '월', values = '별점', aggfunc = 'mean') # 브랜드별 월간 별점 평균
+df2_pivot = df.pivot_table(index = '브랜드명', columns = '월', values = '별점', aggfunc = 'count') # 브랜드별 월간 주문건수
+df2_pivot.plot(kind = 'line', cmap= 'plasma')
+plt.show()
