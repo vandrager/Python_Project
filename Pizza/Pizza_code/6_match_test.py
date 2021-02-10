@@ -10,8 +10,8 @@ import time
 
 
 os.chdir(r"C:\Users\vandr\OneDrive\바탕 화면\Bigdata\Project_python\Pizza\Dataset")
-# file = pd.read_csv("seoul_random.csv", encoding = "cp949") # 서울 자치구
-file_2 = pd.read_csv("not_seoul_random.csv", encoding = "cp949") # 서울 제외 지역
+file = pd.read_csv("seoul_random.csv", encoding = "cp949") # 서울 자치구
+# file_2 = pd.read_csv("not_seoul_random.csv", encoding = "cp949") # 서울 제외 지역
 brand = ['피자헛', '파파존스', '도미노피자', '반올림피자샵', '미스터피자', '피자마루', '피자알볼로', '피자나라치킨공주', '7번가피자', '피자헤븐']
 
 
@@ -28,7 +28,7 @@ for i in range(25):
 
     # 해당 지역구 주소 입력
 
-    elem.send_keys(file_2['주소'][i]) # 브랜드 이름도 자동화
+    elem.send_keys(file['주소'][i]) # 브랜드 이름도 자동화
     elem.send_keys(Keys.ENTER)
     time.sleep(2)
 
