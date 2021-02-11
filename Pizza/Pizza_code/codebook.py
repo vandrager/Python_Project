@@ -45,49 +45,61 @@ Side: menu2 true and not set
 Party: menu 3 or set
 
 '''
-os.chdir(r"C:\Users\vandr\OneDrive\바탕 화면\Bigdata\Project_python\Pizza\Dataset")
-df = pd.read_excel("test.xlsx")
-df['메뉴구분'] = ""
-for i in range(len(df)):
-    for k in menu:
-        if k in df['메인메뉴'][i]:
-            df['메뉴구분'][i] += k
-    if df['메뉴구분'][i] == "":
-        df['메뉴구분'][i] = "기타"
 
-# 데이터 전처리 작업 실행 ( 그룹 )
-df['그룹구분'] = "plz success"
-set_list = ['SET', '세트', 'set']
-for j in range(len(df)):
-    try:
-        if pd.isnull(df['메뉴2'][j]) == False:
-            df['그룹구분'][j] = "Side"
-        elif pd.isnull(df['메뉴2'][j]) == True:
-            df['그룹구분'][j] = "Single"
-        for k in set_list:
-            if (k in df['주문메뉴'][j]) | pd.isnull(df['메뉴3'][j]) == False:
-                df['그룹구분'][j] = "Party"
-    except:
-        pass
+# '''
+# os.chdir(r"C:\Users\vandr\OneDrive\바탕 화면\Bigdata\Project_python\Pizza\Dataset")
+# df = pd.read_excel("test.xlsx")
+# df['메뉴구분'] = ""
+# for i in range(len(df)):
+#     for k in menu:
+#         if k in df['메인메뉴'][i]:
+#             df['메뉴구분'][i] += k
+#     if df['메뉴구분'][i] == "":
+#         df['메뉴구분'][i] = "기타"
 
-print(df['그룹구분'])
-print(df['메뉴구분'])
+# # 데이터 전처리 작업 실행 ( 그룹 )
+# df['그룹구분'] = "plz success"
+# set_list = ['SET', '세트', 'set']
+# for j in range(len(df)):
+#     try:
+#         if pd.isnull(df['메뉴2'][j]) == False:
+#             df['그룹구분'][j] = "Side"
+#         elif pd.isnull(df['메뉴2'][j]) == True:
+#             df['그룹구분'][j] = "Single"
+#         for k in set_list:
+#             if (k in df['주문메뉴'][j]) | pd.isnull(df['메뉴3'][j]) == False:
+#                 df['그룹구분'][j] = "Party"
+#     except:
+#         pass
+
+# print(df['그룹구분'])
+# print(df['메뉴구분'])
+
+# '''
 
 '''
+#  데이터의 최종 형태
+['지역구분', '브랜드명', '지점명', '주문메뉴', '메뉴 구분','그룹 구분','별점', '맛', '양', '배달', '리뷰', '연', '월', '일', 'date', 'weekday']
+[] 그룹 구분의 정확한 정의
+[] 요기요에서 브랜드별 메뉴 이미지와 메뉴명 텍스트 가져오기
+[V] 브랜드별 데이터를 분석해서 가져오고 싶은 데이터의 최종 형태(브랜드별 메뉴 리스트를 가져와서 하나의 엑셀파일로 저장, 해당하는 텍스트가 포함되면 해당되는 메뉴의 숫자를 입력)
 2021/ 02/ 10
 - 메뉴구분과 그룹구분을 어떻게 할 것이냐 그것이 문제로다
 주문메뉴를 버릴 수는 없다. output의 핵심이 주문메뉴이기 때문
 메뉴 구분은 어떻게?
 >>> 단품 주문, 하프 앤 하프(반/반), 도우/엣지 선택
-['주문메뉴', '도우/엣지구분', '하프앤하프여부', '단품주문'
+['주문메뉴', '도우/엣지구분', '하프앤하프여부', '단품주문']
+일단 주문메뉴에서 쉼표로 구분하고 분석하면 될 듯함
 시그니처메뉴랑 기본메뉴랑 섞여있으니 구분이 잘 안돼
 브랜드별로 메뉴구분 전처리를 다르게 할 수밖에 없을듯
-전부 하고 한 번에 합쳐버리자
+
+2021/ 02/ 11
 그룹 구분은 어떻게?
->>> 그룹 - 세트/SET, 행사/할인, 하프, 선택(추가/선택) 총 4개의 그룹
+>>> 그룹 - 세트/SET, 행사/할인/특가, 하프, 선택(추가/선택) 총 4개의 그룹
 
 지금 메뉴판 가져와서 메뉴가 무엇인지 알게 된다면
 주문 금액까지 계산할 수 있겠네 ㅎㅅㅎ..
 - 컴퓨터가 계산하다 욕하겠다.. 불쌍한 my 레노버...
 - 메뉴 가져오려면 가좌(서울 데이터 25번) 등록 브랜드 9개
+- 요기요로 가게에서 이미지는 가져와야할듯
 '''
