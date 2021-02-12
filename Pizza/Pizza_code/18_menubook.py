@@ -12,7 +12,6 @@ from openpyxl import Workbook #  결과물을 엑셀 파일로 저장
 
 os.chdir(r"C:\Users\vandr\OneDrive\바탕 화면\Bigdata\Project_python\Pizza\Dataset\hoho")
 brand = ['피자헛', '파파존스', '도미노피자', '반올림피자샵', '미스터피자', '피자마루', '피자알볼로', '피자나라치킨공주', '7번가피자', '피자헤븐']
-brand = [ '피자헤븐']
 interval = 3 # 3초에 한번씩 스크롤 내림
 browser = webdriver.Chrome("C:/Users/vandr/OneDrive/바탕 화면/Bigdata/Python/webscraping_basic/chromedriver.exe")
 browser.maximize_window()
@@ -21,8 +20,9 @@ browser.maximize_window()
 # 서대문구 남가좌동 피자집 검색 시작
 write_wb = Workbook()
 write_ws = write_wb.active
+write_ws.append(["브랜드", "가격", "메뉴명", "이미지"])
 # browser.get("https://www.yogiyo.co.kr/mobile/#/")
-browser.get("https://www.yogiyo.co.kr/mobile/#/38232/")
+browser.get("https://www.yogiyo.co.kr/mobile/#/")
 
 elem = browser.find_element_by_name("address_input")
 
@@ -84,7 +84,6 @@ print(match)
 
 # 브랜드 메뉴 가져와서 저장하기
 for v in range(len(match)):
-    write_ws.append(["브랜드", "가격", "메뉴명", "이미지"])
     elem = browser.find_element_by_css_selector("#category > ul > li.hidden-xs.menu-search > a")
     time.sleep(2)
     elem.click()
@@ -116,8 +115,7 @@ for v in range(len(match)):
             n = name.text()
             img = image['style']
         write_ws.append([match[v], p, n, img])
-    write_wb.save(f"menubook_{v}.xlsx")
     print("메뉴 스크래핑 완료")
     browser.back()
 
-# 이후 전처리 작업으로 중복되는 메뉴 제거할 것
+write_wb.save("menubook_clear.xlsx")
