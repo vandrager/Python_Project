@@ -22,7 +22,7 @@ df['구'] = location.str.get(2)
 # 서울특별시 + (강남구, 종로구, 동작구, 도봉구...)
 df['시구'] = df['시'] + " " + df['군']
 df[df['시'] != "서울특별시"] = np.nan
-df.drop_duplicates(subset=['시군구'], inplace = True) # 시군구 중복값 제거
+df.icates(subset=['시군구'], inplace = True) # 시군구 중복값 제거
 df.drop_duplicates(subset=['시구'], inplace = True) # 시구 중복값 제거
 df.dropna(axis = 0, inplace= True)
 df['주소'] = df['시군구'] + " " + df['도로명'] # 웹스크래핑에 사용할 주소 열 생성
