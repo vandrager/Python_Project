@@ -16,12 +16,11 @@ interval = 3 # 3초에 한번씩 스크롤 내림
 browser = webdriver.Chrome("C:/Users/vandr/OneDrive/바탕 화면/Bigdata/Python/webscraping_basic/chromedriver.exe")
 browser.maximize_window()
 
-
+'''
 # 서대문구 남가좌동 피자집 검색 시작
 write_wb = Workbook()
 write_ws = write_wb.active
 write_ws.append(["브랜드", "가격", "메뉴명", "이미지"])
-# browser.get("https://www.yogiyo.co.kr/mobile/#/")
 browser.get("https://www.yogiyo.co.kr/mobile/#/")
 
 elem = browser.find_element_by_name("address_input")
@@ -119,3 +118,38 @@ for v in range(len(match)):
     browser.back()
 
 write_wb.save("menubook_clear.xlsx")
+'''
+
+
+# 김준현의 피자헤븐 메뉴 가져와서 저장
+write_wb = Workbook()
+write_ws = write_wb.active
+write_ws.append(["브랜드", "가격", "메뉴명", "이미지"])
+browser.get("https://www.yogiyo.co.kr/mobile/#/38232/")
+time.sleep(interval)
+
+
+
+# 브랜드 메뉴 가져와서 저장하기
+soup = bs(browser.page_source, "lxml")
+items = soup.find_all("li", attrs={"ng-class": "get_menu_item_class(item)"})
+
+for pizza in items:
+    name = pizza.find("div", attrs={"class": "menu-name ng-binding", "ng-bind-html":"item.name|strip_html"})
+    image = pizza.find("div", attrs={"class": "photo"})
+
+    try:
+        price = pizza.find("span", attrs={"class": "ng-binding", "ng-bind": "item.price|krw"})
+        p = price.text.strip()
+        n = name.text.strip()
+        img = image['style']
+    except:
+        price = pizza.find("span", attrs={"ng-show": "is_discount(item)", "ng-bind": "get_discounted_price(item)|krw"})
+        p = price.text()
+        n = name.text()
+        img = image['style']
+    write_ws.append(["김준현의피자헤븐", p, n, img])
+print("메뉴 스크래핑 완료")
+
+
+write_wb.save("menubook_heaven.xlsx")
