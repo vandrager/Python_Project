@@ -3,7 +3,7 @@ import re
 import pandas as pd
 import numpy as np
 
-os.chdir(r"C:\Users\vandr\OneDrive\바탕 화면\Bigdata\Project_python\Pizza\Dataset\hoho")
+os.chdir(r"C:\Users\vandr\OneDrive\바탕 화면\Bigdata\Project_python\Pizza\Dataset\1차 분석")
 
 '''
 # 전처리 마무리
@@ -18,12 +18,10 @@ file.to_excel("menu_final.xlsx")
 '''
 
 
-os.chdir(r"C:\Users\vandr\OneDrive\바탕 화면\Bigdata\Project_python\Pizza\Dataset")
-
-df = pd.read_excel("Review.xlsx")
-book = pd.read_excel("menu_final.xlsx")
-menu = df['주문메뉴'].str.split(",")
-df['메인메뉴'] = menu.str.get(0)
+df = pd.read_excel("Review_2.xlsx")
+book = pd.read_excel("MENU.xlsx")
+# menu = df['주문메뉴'].str.split(",")
+# df['메인메뉴'] = menu.str.get(0)
 
 '''
 # TEST(1) 피자 주문 개수로 그룹구분 만들어보기
@@ -76,7 +74,7 @@ for i in range(len(df)):
     else:
         df['그룹구분'][i] = "Original"
 '''
-df['메뉴구분'] = "기타"
+df['메뉴구분'] = "미분류"
 # Pandas dataframe 에서 특정 조건을 충족하면 열 값을 조건으로 바꾸기 
 for i in range(len(book)):
     for j in range(len(df)):
@@ -84,8 +82,16 @@ for i in range(len(book)):
             df['메뉴구분'][j] = book['메뉴명'][i]
         else:
             pass
+# df.loc[(df['가격'] > 50) & (df['메인메뉴'] > 30),'리뷰']='test'
 
-# df.loc[(df['가격'] > 50) & (df['메인메뉴'] > 30),'도덕']='test'
+'''
+* 21/02/25 수정사항 
+메뉴북에서 음료/사이드 메뉴는 제거하고 피자만 남겨둔 채로 다시 메뉴구분 만들 것
+기타가 약 30% 비율을 차지하고 있음
+브랜드별 메뉴 수정(빈칸/누락메뉴 추가)
+텍스트 공백제거 코드북도 동일 적용할 것
+'''
+
 df.drop("메인메뉴", axis=1, inplace=True)
 df = df[['지역구분', '브랜드명', '지점명', '주문메뉴', '메뉴구분', '그룹구분','별점', '맛', '양', '배달', '리뷰', '연', '월', '일', 'date', 'weekday']]
 df.to_excel("Review.xlsx")
