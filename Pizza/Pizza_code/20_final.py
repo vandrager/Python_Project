@@ -18,11 +18,11 @@ file.to_excel("menu_final.xlsx")
 '''
 
 
-df = pd.read_excel("Review_2.xlsx")
-book = pd.read_excel("MENU.xlsx")
+df = pd.read_excel("Review_4.xlsx")
+# book = pd.read_excel("MENU.xlsx")
+book = pd.read_excel("dod.xlsx", header=0) # 피자나라치킨공주 세트 메뉴 2차 가공
 # menu = df['주문메뉴'].str.split(",")
 # df['메인메뉴'] = menu.str.get(0)
-
 '''
 # TEST(1) 피자 주문 개수로 그룹구분 만들어보기
 print(len(df[df['메인메뉴'].str.contains('/1')])) 254597
@@ -74,7 +74,36 @@ for i in range(len(df)):
     else:
         df['그룹구분'][i] = "Original"
 '''
-df['메뉴구분'] = "미분류"
+
+df['그룹구분'] = 0
+for i in range(len(df)):
+    if "SET" in df['메인메뉴'][i]: # 피자헤븐
+        df['그룹구분'][i] = "Set"
+    elif "세트" in df['메인메뉴'][i]: # 피자헤븐
+        df['그룹구분'][i] = "Set"
+    elif "MONSTER" in df['메인메뉴'][i]: # 반올림
+        df['그룹구분'][i] = "Big"
+    elif "BIGL" in df['메인메뉴'][i]: # 피자헤븐
+        df['그룹구분'][i] = "Big"
+    elif "BL" in df['메인메뉴'][i]: # 피자헤븐
+        df['그룹구분'][i] = "Big"
+    elif "G" in df['메인메뉴'][i]: # 7번가 피자
+        df['그룹구분'][i] = "Big"
+    elif ("P" in df['메인메뉴'][i]) & ( df['브랜드명'][i] == "파파존스피자"): # 파파존스
+        df['그룹구분'][i] = "Big"
+    elif "F" in df['메인메뉴'][i]: # 파파존스
+        df['그룹구분'][i] = "Big"
+    elif "L" in df['메인메뉴'][i]:
+        df['그룹구분'][i] = "Large"
+    elif "M" in df['메인메뉴'][i]:
+        df['그룹구분'][i] = "Medium"
+    elif "R" in df['메인메뉴'][i]:
+        df['그룹구분'][i] = "Regular"
+    else:
+        df['그룹구분'][i] = "Original"
+
+
+# df['메뉴구분'] = "미분류"
 # Pandas dataframe 에서 특정 조건을 충족하면 열 값을 조건으로 바꾸기 
 for i in range(len(book)):
     for j in range(len(df)):
@@ -85,16 +114,23 @@ for i in range(len(book)):
 # df.loc[(df['가격'] > 50) & (df['메인메뉴'] > 30),'리뷰']='test'
 
 '''
-* 21/02/25 수정사항 
+* 21/02/15 수정사항 
 메뉴북에서 음료/사이드 메뉴는 제거하고 피자만 남겨둔 채로 다시 메뉴구분 만들 것
 기타가 약 30% 비율을 차지하고 있음
 브랜드별 메뉴 수정(빈칸/누락메뉴 추가)
 텍스트 공백제거 코드북도 동일 적용할 것
+
+* 21/02/16 수정사항
+반올림피자샵 세트1, 세트2, 세트5, 세트6 수정(최다 주문)
+사이드
+피자나라 치킨공주 세트메뉴 단품 오류 -> 세트 메뉴로 변경
+그룹구분 순서 변경 L -> SET(X) SET -> L(O)
+
 '''
 
 df.drop("메인메뉴", axis=1, inplace=True)
 df = df[['지역구분', '브랜드명', '지점명', '주문메뉴', '메뉴구분', '그룹구분','별점', '맛', '양', '배달', '리뷰', '연', '월', '일', 'date', 'weekday']]
-df.to_excel("Review.xlsx")
+df.to_excel("Review_5.xlsx")
 
 
 
