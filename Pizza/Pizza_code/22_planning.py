@@ -8,8 +8,8 @@ os.chdir(r"C:\Users\vandr\OneDrive\바탕 화면\Bigdata\Project_python\Pizza\Da
 
 df = pd.read_excel("Review.xlsx")
 
-gdf = df.groupby(['브랜드명', '메뉴구분'])['별점'].count()
-gdf.to_excel("test.xlsx")
+# gdf = df.groupby(['브랜드명', '메뉴구분'])['별점'].count()
+# gdf.to_excel("test.xlsx")
 # for key, group in gdf:
 #     print("* key :", key)
 #     print("* number :", format(len(group), ","))
@@ -21,16 +21,17 @@ gdf.to_excel("test.xlsx")
 # django 웹 분석 프로그래밍 공부
 
 '''
-2021-02-19
-dashboard(1page)
+2021-02-19 ~ 2021-02-20
+"PIDUK"(피자 덕후)
+dashboard(Only 1page)
 피자 마니아들을 위한 메뉴 추천 서비스
 (필터) 1. 브랜드명 | 2. date(2016 ~ )
-
+별점이 KPI니까 별점 평균값 구하고 /5 해서 퍼센티지 구하기
 [스코어카드]
 별점, 주문건수
 
 [주문추이]
-맛, 양, 배달 점수 삼각형 파이 그래프
+맛, 양, 배달 점수 삼각형 파이 그래프 -> 그룹구분별 영역 데이터 그래프 그리기
 연도/월 그룹화 - 주말/평일 막대 그래프
 브랜드 -> 메뉴 -> 그룹 퍼널 차트
 
@@ -38,4 +39,7 @@ dashboard(1page)
 best menu top5 - 이미지, 메뉴구분(그룹구분), 가격, 메뉴의 별점 합계/평균 점수
 
 [그룹 그분 파이 그래프]
+
+-가격대별 주문 추이
+-그룹구분별 주문 추이
 '''
