@@ -6,7 +6,7 @@ import numpy as np
 os.chdir(r"C:\Users\vandr\OneDrive\바탕 화면\Bigdata\Project_python\Pizza\Dataset\2차 분석")
 # df = pd.read_excel("sample.xlsx") # 샘플 데이터
 
-df = pd.read_excel("Review.xlsx")
+# df = pd.read_excel("Review.xlsx")
 
 # gdf = df.groupby(['브랜드명', '메뉴구분'])['별점'].count()
 # gdf.to_excel("test.xlsx")
@@ -42,4 +42,21 @@ best menu top5 - 이미지, 메뉴구분(그룹구분), 가격, 메뉴의 별점
 
 -가격대별 주문 추이
 -그룹구분별 주문 추이
+'''
+
+'''
+주말 여부 추가
+CASE 
+    WHEN weekday IN ("Thursday", "Tuesday", "Monday", "Wednesday",	"Friday") THEN "평일" 
+    WHEN weekday IN ("Sunday",	"Saturday")THEN "주말" 
+    ELSE "Other" 
+END
+
+CASE 
+    WHEN 평균 점수 > 14.4 THEN "이 메뉴의 추천 정도는 '매우 높음' 입니다."
+    WHEN 평균 점수 > 14.4 THEN "이 메뉴의 추천 정도는 '높음' 입니다."
+    WHEN 평균 점수 > 14.4 THEN "이 메뉴의 추천 정도는 '보통' 입니다."
+    ELSE "이 메뉴의 추천 정도는 '낮음' 입니다." 
+END
+---> 평균점수가 숫자이기에 THEN 이후 출력되어 나오는 형태도 숫자이어야함
 '''
