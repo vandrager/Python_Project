@@ -40,40 +40,20 @@ elem.click()
 
 # 공고 검색 시작
 for i in range(1, 11):
-    # 마케팅 공고 리스트 스크롤
-    # 화면 가장 아래로 스크롤 내리기
-    browser.execute_script("window.scrollTo(0, document.body.scrollHeight)")
-
-    # 현재 문서 높이를 가져와서 저장
-    prev_height = browser.execute_script("return document.body.scrollHeight")
-
-    # 반복 수행
-    while True:
-        # 스크롤을 가장 아래로 내림
-        browser.execute_script("window.scrollTo(0, document.body.scrollHeight)")
-        
-        # 페이지 로딩 대기
-        time.sleep(interval)
-
-
-        # 현재 문서 높이를 가져와서 저장
-        curr_height = browser.execute_script("return document.body.scrollHeight")
-        if curr_height == prev_height:
-            break
-
-        prev_height = curr_height
-
     print("공고 리스트 스크롤 완료")
     soup = bs(browser.page_source, "lxml")
     m_here = soup.find_all("tr", attrs={"class": "devloopArea"})
     for m in m_here:
-        c = m.find("a", attrs={"class": "link normalLog", "data-clickctgrcode":"B01"})
-        t = m.find("a", attrs={"class": "link normalLog", "data-clickctgrcode":"B02"})
-        d = m.find("span", attrs={"class": "date dotum"})
-        company = c.text.strip()
-        title = t.text.strip()
-        date = d.text.strip()
-        link = t['href']
+        try:
+            c = m.find("a", attrs={"class": "link normalLog", "data-clickctgrcode":"B01"})
+            t = m.find("a", attrs={"class": "link normalLog", "data-clickctgrcode":"B02"})
+            d = m.find("span", attrs={"class": "date dotum"})
+            company = c.text.strip()
+            title = t.text.strip()
+            date = d.text.strip()
+            link = t['href']
+        except:
+            pass
         write_ws.append([company, title, date, link])
     write_wb.save("maketing{}.xlsx".format(today))
     if i == 1:
